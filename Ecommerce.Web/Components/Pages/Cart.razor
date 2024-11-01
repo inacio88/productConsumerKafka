@@ -1,0 +1,57 @@
+@page "/cart/{ProductId:int}"
+@inject HttpClient httpClient
+@inject IJSRuntime JSRuntime
+<h3>Cart</h3>
+
+<form>
+    <div class="form-group mb-4">
+        <label for="">Cutomer name</label>
+        <input type="text" class="form-control" @bind="order.CustomerName">
+    </div>
+    <div class="form-group mb-4">
+        <label for="">Product name</label>
+        <input type="text" class="form-control" @bind="product.Name">
+    </div>
+    <div class="form-group mb-4">
+        <label for="">Quantity</label>
+        <input type="text" class="form-control" @bind="order.Quantity">
+    </div>
+    <button type="button" class="btn btn-primary" @onclick="CreateOrder">Create order</button>
+</form>
+
+@code
+{
+    [Parameter]
+    public int ProductId { get; set; }
+    public OrderModel order = new OrderModel();
+    public ProductModel product = new ProductModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("oiiiiiiiiiiii");
+
+        order.ProductId = ProductId;
+        product = await httpClient.GetFromJsonAsync<ProductModel>($"http://localhost:5259/api/Product/{ProductId}");
+        await base.OnInitializedAsync();
+    }
+
+    public async Task CreateOrder()
+    {
+        Console.WriteLine("aqui");
+
+        var res = await httpClient.PostAsJsonAsync<OrderModel>("http://localhost:5243/api/Order", order);
+
+        Console.WriteLine("aqui2");
+
+        if (res.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Sucesso");
+            await JSRuntime.InvokeVoidAsync("alert", "Create order success");
+        }
+        else
+        {
+            Console.WriteLine("Erro");
+            await JSRuntime.InvokeVoidAsync("alert", "Erro");
+        }
+    }
+}
