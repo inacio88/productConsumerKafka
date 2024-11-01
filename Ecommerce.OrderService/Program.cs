@@ -1,4 +1,5 @@
 using Ecommerce.OrderService.Data;
+using Ecommerce.OrderService.Kafka;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IKafkaProducer, KafkaProducer>();
 
 string conexao = "Server=localhost;Database=EcommerceOrder;Trusted_Connection=True;TrustServerCertificate=True;User ID=sa;Password='Senha123!';integrated security=false;";
 builder.Services.AddDbContext<OrderDbContext>(options => 
