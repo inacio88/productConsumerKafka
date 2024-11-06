@@ -1,4 +1,5 @@
 using Ecommerce.ProductService.Data;
+using Ecommerce.ProductService.Kafka;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHostedService<KafkaConsumer>();
 
 string conexao = "Server=localhost;Database=EcommerceProduct;Trusted_Connection=True;TrustServerCertificate=True;User ID=sa;Password='Senha123!';integrated security=false;";
 builder.Services.AddDbContext<ProductDbContext>(option => 
